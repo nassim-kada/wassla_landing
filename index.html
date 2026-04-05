@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WASSLA — دليلك المهني في الجزائر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Unbounded:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8192C;
+    --red-dark: #B5101F;
+    --black: #0A0A0A;
+    --dark: #111214;
+    --card: #161719;
+    --border: rgba(255,255,255,0.07);
+    --text: #F4F4F5;
+    --muted: #8A8A95;
+    --white: #FFFFFF;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    overflow-x: hidden;
+    direction: rtl;
+  }
+
+  /* NOISE */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none; opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 72px;
+    background: rgba(10,10,10,0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.55rem; font-weight: 900;
+    color: var(--white); letter-spacing: -1px;
+    direction: ltr; unicode-bidi: isolate;
+  }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; font-size: 0.88rem; font-weight: 600; }
+  .nav-links a { color: var(--muted); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--red); color: var(--white);
+    padding: 10px 22px; border-radius: 6px;
+    font-weight: 700; font-size: 0.85rem;
+    text-decoration: none; transition: background .2s, transform .15s; white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 120px 5vw 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-glow {
+    position: absolute; width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(232,25,44,0.15) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: glowPulse 6s ease-in-out infinite alternate;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(232,25,44,0.12); border: 1px solid rgba(232,25,44,0.3);
+    border-radius: 100px; padding: 6px 16px;
+    font-size: 0.78rem; font-weight: 700; color: var(--red);
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+    position: relative; z-index: 1;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--red); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+  .hero-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 900; line-height: 0.95;
+    letter-spacing: -3px; color: var(--white);
+    margin-bottom: 12px;
+    animation: fadeUp 0.8s 0.1s ease both;
+    position: relative; z-index: 1;
+    direction: ltr; unicode-bidi: isolate;
+  }
+  .hero-title .accent { color: var(--red); }
+  .hero-tagline {
+    font-size: clamp(1.05rem, 2.5vw, 1.4rem);
+    font-weight: 400; color: var(--muted);
+    max-width: 580px; margin: 0 auto 16px;
+    line-height: 1.75;
+    animation: fadeUp 0.8s 0.2s ease both;
+    position: relative; z-index: 1;
+  }
+  .hero-sub {
+    font-size: 0.88rem; color: rgba(255,255,255,0.3);
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s 0.25s ease both;
+    font-weight: 400;
+    direction: ltr; unicode-bidi: isolate;
+  }
+
+  /* SEARCH CARD (INTEGRATED IN HERO) */
+  .hero-search {
+    width: 100%;
+    max-width: 960px;
+    margin-top: 16px;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .search-card {
+    background: rgba(22, 23, 25, 0.5); /* Glass effect */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; 
+    padding: 32px 40px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    text-align: right; /* Override hero center text */
+  }
+  .search-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr auto; gap: 12px; align-items: end; }
+  .field-group label {
+    display: block; font-size: 0.72rem; font-weight: 700;
+    color: var(--muted); margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .field-group input, .field-group select {
+    width: 100%;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 13px 16px;
+    color: var(--white); font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem; outline: none;
+    transition: border-color .2s, background .2s; appearance: none;
+  }
+  .field-group input:focus, .field-group select:focus {
+    border-color: var(--red); background: rgba(232,25,44,0.08);
+  }
+  .field-group select option { background: #1a1a1a; color: var(--white); }
+  .search-btn {
+    background: var(--red); color: var(--white); border: none;
+    border-radius: 10px; padding: 13px 32px;
+    font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all .2s; white-space: nowrap;
+    box-shadow: 0 0 24px rgba(232,25,44,0.3);
+  }
+  .search-btn:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+  .hero-actions {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.4s ease both;
+    position: relative; z-index: 1;
+    margin-top: 32px;
+  }
+  .btn-primary {
+    background: var(--red); color: var(--white);
+    padding: 15px 36px; border-radius: 8px;
+    font-weight: 700; font-size: 1rem; font-family: 'Cairo', sans-serif;
+    text-decoration: none; transition: all .2s;
+    box-shadow: 0 0 40px rgba(232,25,44,0.35);
+  }
+  .btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: 0 0 60px rgba(232,25,44,0.5); }
+  .btn-ghost {
+    border: 1px solid var(--border); color: var(--text);
+    padding: 15px 36px; border-radius: 8px;
+    font-weight: 600; font-size: 1rem; font-family: 'Cairo', sans-serif;
+    text-decoration: none; transition: all .2s;
+    background: rgba(255,255,255,0.04);
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 16px 0; background: var(--dark);
+  }
+  .marquee-track {
+    display: flex; gap: 48px;
+    animation: marquee 28s linear infinite; white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.72rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .marquee-item::after { content: '✦'; color: var(--red); font-size: 0.55rem; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* SECTIONS */
+  .section { padding: 100px 5vw; position: relative; }
+  .section-header { text-align: center; margin-bottom: 60px; }
+  .section-eyebrow {
+    font-size: 0.72rem; font-weight: 700; color: var(--red);
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 12px; display: block;
+    direction: ltr; unicode-bidi: isolate;
+  }
+  .section-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(1.7rem, 4vw, 2.7rem);
+    font-weight: 900; color: var(--white);
+    letter-spacing: -1px; line-height: 1.1;
+  }
+  .section-sub { color: var(--muted); margin-top: 12px; font-size: 0.95rem; font-weight: 400; }
+
+  /* TOP SERVICES TODAY SECTION */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .service-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--red);
+    box-shadow: 0 12px 30px rgba(232,25,44,0.15);
+  }
+  
+  .service-img {
+    background: #ffffff;
+    height: 180px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .service-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .service-details {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-grow: 1;
+  }
+  .service-details h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+    direction: ltr; 
+    text-align: right;
+  }
+  .service-verified {
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+  .service-verified span { color: var(--red); }
+
+  /* CATEGORIES */
+  .cat-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px; max-width: 1100px; margin: 0 auto;
+  }
+  .cat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px 16px;
+    text-align: center; cursor: pointer; transition: all .25s;
+    text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .cat-card:hover {
+    border-color: var(--red); background: rgba(232,25,44,0.06);
+    transform: translateY(-3px); box-shadow: 0 12px 30px rgba(232,25,44,0.15);
+  }
+  .cat-icon {
+    width: 48px; height: 48px; background: rgba(232,25,44,0.12);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; transition: background .25s;
+  }
+  .cat-card:hover .cat-icon { background: rgba(232,25,44,0.22); }
+  .cat-name { font-size: 0.82rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+
+  /* HOW IT WORKS */
+  .how-section {
+    background: var(--black);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px; max-width: 1100px; margin: 0 auto;
+  }
+  .step-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 44px 36px;
+    position: relative; overflow: hidden;
+    transition: border-color .3s, transform .3s;
+  }
+  .step-item:hover { border-color: var(--red); transform: translateY(-4px); }
+  .step-item::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--red); opacity: 0; transition: opacity .3s;
+  }
+  .step-item:hover::before { opacity: 1; }
+  .step-num {
+    font-family: 'Unbounded', sans-serif; font-size: 3.5rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--red) 0%, rgba(232,25,44,0.25) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1; margin-bottom: 20px; display: block;
+    direction: ltr; unicode-bidi: isolate;
+  }
+  .step-icon { font-size: 2.2rem; margin-bottom: 16px; display: block; }
+  .step-title { font-size: 1.15rem; font-weight: 800; color: var(--white); margin-bottom: 12px; }
+  .step-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; font-weight: 400; }
+
+  /* TESTIMONIALS (AUTO SCROLLING MARQUEE) */
+  .testimonials-wrap {
+    overflow: hidden;
+    width: 100%;
+    padding: 20px 0;
+  }
+  .testimonials-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 35s linear infinite;
+  }
+  .testimonials-track:hover {
+    animation-play-state: paused;
+  }
+  .testi-group {
+    display: flex;
+    gap: 20px;
+    padding-right: 20px; /* Equal to gap to make loop mathematically perfect */
+  }
+  .testi-card {
+    width: 350px; /* Fixed width for horizontal layout */
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px;
+    transition: border-color .2s;
+    white-space: normal; /* Restore text wrapping inside card */
+  }
+  .testi-card:hover { border-color: rgba(232,25,44,0.3); }
+  .testi-quote { font-size: 3rem; color: var(--red); line-height: 0.5; margin-bottom: 16px; font-family: Georgia, serif; opacity: 0.4; }
+  .testi-text { font-size: 0.9rem; color: var(--text); line-height: 1.8; margin-bottom: 24px; font-weight: 400; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--red);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; font-weight: 700; color: var(--white); flex-shrink: 0;
+  }
+  .testi-name { font-size: 0.85rem; font-weight: 700; color: var(--white); }
+  .testi-role { font-size: 0.75rem; color: var(--muted); }
+
+  /* CTA SIMPLE */
+  .cta-simple { max-width: 1100px; margin: 0 auto; }
+  .cta-simple-inner {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 52px 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 40px; transition: border-color .3s;
+  }
+  .cta-simple-inner:hover { border-color: rgba(232,25,44,0.3); }
+  .cta-simple-label { font-size: 0.72rem; font-weight: 800; color: var(--red); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+  .cta-simple-title {
+    font-family: 'Unbounded', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 900; color: var(--white); letter-spacing: -0.5px; margin-bottom: 8px;
+  }
+  .cta-simple-sub { color: var(--muted); font-size: 0.9rem; font-weight: 400; }
+  .cta-simple-actions { display: flex; gap: 12px; flex-shrink: 0; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer { background: var(--dark); border-top: 1px solid var(--border); padding: 64px 5vw 32px; }
+  .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-logo {
+    font-family: 'Unbounded', sans-serif; font-size: 1.4rem; font-weight: 900;
+    color: var(--white); letter-spacing: -1px; margin-bottom: 16px; display: inline-block;
+    direction: ltr; unicode-bidi: isolate;
+  }
+  .footer-logo span { color: var(--red); }
+  .footer-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.75; margin-bottom: 24px; font-weight: 400; }
+  .footer-contacts { display: flex; flex-direction: column; gap: 8px; }
+  .footer-contacts a { font-size: 0.82rem; color: var(--muted); text-decoration: none; transition: color .2s; display: flex; align-items: center; gap: 8px; }
+  .footer-contacts a:hover { color: var(--white); }
+  .footer-col-title { font-size: 0.72rem; font-weight: 800; color: var(--white); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+  .footer-links a:hover { color: var(--white); }
+  .footer-bottom {
+    border-top: 1px solid var(--border); padding-top: 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.78rem; color: rgba(255,255,255,0.3);
+  }
+
+  /* ENHANCED ANIMATIONS */
+  @keyframes fadeUp { 
+    from { 
+      opacity: 0; 
+      transform: translateY(30px) scale(0.97); 
+      filter: blur(4px); 
+    } 
+    to { 
+      opacity: 1; 
+      transform: translateY(0) scale(1); 
+      filter: blur(0); 
+    } 
+  }
+  
+  @keyframes glowPulse {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.5; }
+  }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  
+  @media (max-width: 900px) {
+    .search-grid { grid-template-columns: 1fr 1fr; }
+    .search-grid .search-btn { grid-column: 1 / -1; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+  }
+  
+  /* HIGHLY REFINED MOBILE VIEW (Smaller Components & Horizontal Scrolls) */
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    
+    /* Hero Adjustments */
+    .hero { padding: 90px 5vw 40px; }
+    .hero-bg-grid { display: none; }
+    .hero-title { font-size: clamp(3.5rem, 15vw, 5rem); letter-spacing: -2px; }
+    .hero-glow { width: 350px; height: 350px; opacity: 0.4; } 
+    .hero-eyebrow { margin-bottom: 20px; font-size: 0.7rem; }
+    .hero-tagline { font-size: 1rem; margin-bottom: 12px; }
+    
+    /* Search Card (Integrated in Hero) */
+    .hero-search { margin-top: 24px; }
+    .search-card { padding: 16px 12px; border-radius: 12px; }
+    .search-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .field-group:nth-child(1) { grid-column: 1 / -1; }
+    .field-group input, .field-group select { padding: 10px 12px; font-size: 0.8rem; }
+    .search-btn { grid-column: 1 / -1; padding: 12px; font-size: 0.9rem; margin-top: 4px; }
+    
+    /* General Sections Adjusted */
+    .section { padding: 50px 5vw; }
+    .section-header { margin-bottom: 32px; }
+    .section-title { font-size: 1.4rem; }
+    .section-eyebrow { font-size: 0.65rem; margin-bottom: 8px; }
+    
+    /* Top Services App-like Horizontal Scroll */
+    .services-grid { 
+      display: flex; 
+      overflow-x: auto; 
+      scroll-snap-type: x mandatory; 
+      gap: 12px; 
+      padding-bottom: 16px;
+      margin-right: -5vw;
+      margin-left: -5vw;
+      padding-inline: 5vw;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .services-grid::-webkit-scrollbar { display: none; }
+    .service-card { flex: 0 0 75%; scroll-snap-align: center; border-radius: 12px; }
+    .service-img { height: 130px; }
+    .service-details { padding: 14px 12px; gap: 12px; }
+    .service-details h3 { font-size: 0.85rem; }
+    .service-verified { font-size: 0.75rem; padding-top: 12px; }
+
+    /* Categories Adjusted */
+    .cat-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .cat-card { padding: 16px 12px; gap: 8px; border-radius: 12px; }
+    .cat-icon { width: 40px; height: 40px; font-size: 1.2rem; }
+    .cat-name { font-size: 0.75rem; }
+    
+    /* How it Works Adjusted - Smaller */
+    .step-item { padding: 20px 16px; border-radius: 16px; }
+    .step-num { font-size: 2rem; margin-bottom: 10px; }
+    .step-icon { font-size: 1.5rem; margin-bottom: 10px; }
+    .step-title { font-size: 0.95rem; margin-bottom: 8px; }
+    .step-desc { font-size: 0.8rem; line-height: 1.6; }
+
+    /* Testimonials Mobile Marquee Adjustments */
+    .testi-card { width: 280px; padding: 24px 20px; border-radius: 12px; }
+    .testi-group { gap: 16px; padding-right: 16px; }
+    .testi-quote { font-size: 2rem; margin-bottom: 10px; }
+    .testi-text { font-size: 0.85rem; margin-bottom: 20px; }
+
+    /* CTA Adjusted */
+    .cta-simple-inner { flex-direction: column; align-items: flex-start; padding: 28px 20px; gap: 20px; border-radius: 16px;}
+    .cta-simple-title { font-size: 1.2rem; }
+    .cta-simple-sub { font-size: 0.85rem; }
+    .btn-primary, .btn-ghost { padding: 12px 24px; font-size: 0.9rem; }
+
+    /* Footer 2-Column Grid Adjusted */
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px 16px; }
+    .footer-top > div:first-child { grid-column: 1 / -1; }
+    .footer-col-title { font-size: 0.7rem; margin-bottom: 12px; }
+    .footer-links a { font-size: 0.8rem; }
+  }
+  
+  @media (max-width: 380px) {
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" dir="ltr">WASS<span>LA</span></div>
+  <ul class="nav-links">
+    <li><a href="#categories">التصنيفات</a></li>
+    <li><a href="#how">كيف يعمل</a></li>
+    <li><a href="#join">انضم</a></li>
+  </ul>
+  <a href="#join" class="nav-cta">انضم مجاناً</a>
+</nav>
+
+<!-- HERO WITH INTEGRATED SEARCH -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-eyebrow">دليلك المهني الأول في الجزائر</div>
+
+  <h1 class="hero-title" dir="ltr">WASS<span class="accent">LA</span></h1>
+
+  <p class="hero-tagline">
+    ابحث عن أي متجر، خبير، أو خدمة — بالاسم، التصنيف، أو الولاية
+  </p>
+  <p class="hero-sub" dir="ltr">La référence professionnelle de l'Algérie &nbsp;•&nbsp; Algeria's #1 Business Directory</p>
+
+  <!-- SEARCH CARD (MOVED HERE) -->
+  <div class="hero-search">
+    <div class="search-card">
+      <div class="search-grid">
+        <div class="field-group">
+          <label>الاسم أو الكلمة المفتاحية</label>
+          <input type="text" placeholder="مثال: ميكانيك، محامي، مطعم...">
+        </div>
+        <div class="field-group">
+          <label>التصنيف</label>
+          <select>
+            <option value="">كل التصنيفات</option>
+            <option>صحة وعافية</option>
+            <option>قانون ومحاسبة</option>
+            <option>صناعة وخدمات</option>
+            <option>سيارات ونقل</option>
+            <option>تقنية ورقمية</option>
+            <option>جمال وموضة</option>
+            <option>تجارة ومتاجر</option>
+            <option>بناء وعقار</option>
+            <option>مطاعم وأغذية</option>
+            <option>تعليم وتكوين</option>
+            <option>زراعة وبيئة</option>
+            <option>مالية وتأمين</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>الولاية</label>
+          <select>
+            <option value="">كل الولايات</option>
+            <option>الجزائر</option>
+            <option>وهران</option>
+            <option>قسنطينة</option>
+            <option>عنابة</option>
+            <option>البليدة</option>
+            <option>تيزي وزو</option>
+            <option>بجاية</option>
+            <option>سطيف</option>
+            <option>بومرداس</option>
+            <option>تلمسان</option>
+            <option>باتنة</option>
+            <option>بسكرة</option>
+            <option>الأغواط</option>
+            <option>ورقلة</option>
+            <option>غرداية</option>
+            <option>تمنراست</option>
+          </select>
+        </div>
+        <button class="search-btn">بحث ←</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-actions">
+    <a href="#join" class="btn-ghost">أضف نشاطك التجاري</a>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">صحة وعافية</div>
+    <div class="marquee-item">سيارات ونقل</div>
+    <div class="marquee-item">تقنية رقمية</div>
+    <div class="marquee-item">عقار وبناء</div>
+    <div class="marquee-item">تعليم وتكوين</div>
+    <div class="marquee-item">تجارة ومتاجر</div>
+    <div class="marquee-item">جمال وموضة</div>
+    <div class="marquee-item">مطاعم وأغذية</div>
+    <div class="marquee-item">قانون ومحاسبة</div>
+    <div class="marquee-item">زراعة وبيئة</div>
+    <div class="marquee-item">صحة وعافية</div>
+    <div class="marquee-item">سيارات ونقل</div>
+    <div class="marquee-item">تقنية رقمية</div>
+    <div class="marquee-item">عقار وبناء</div>
+    <div class="marquee-item">تعليم وتكوين</div>
+    <div class="marquee-item">تجارة ومتاجر</div>
+    <div class="marquee-item">جمال وموضة</div>
+    <div class="marquee-item">مطاعم وأغذية</div>
+    <div class="marquee-item">قانون ومحاسبة</div>
+    <div class="marquee-item">زراعة وبيئة</div>
+  </div>
+</div>
+
+<!-- TOP SERVICES TODAY (ARABIC DESIGN) -->
+<section class="section" style="background: var(--dark); border-bottom: 1px solid var(--border);">
+  <div class="section-header reveal">
+    <span class="section-eyebrow">Top Services • خدمات مختارة</span>
+    <h2 class="section-title">أفضل الخدمات اليوم</h2>
+    <p class="section-sub">اكتشف أبرز المحترفين والخدمات الموثّقة المتاحة الآن</p>
+  </div>
+
+  <div class="services-grid">
+    <!-- Card 1 -->
+    <div class="service-card reveal">
+      <div class="service-img">
+        <img src="4.webp" alt="Installation et Maintenance">
+      </div>
+      <div class="service-details">
+        <h3>Installation et Maintenance</h3>
+        <div class="service-verified">
+           موثّق 
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="service-card reveal">
+      <div class="service-img">
+        <img src="7.webp" alt="AL MIRQAB ELECTRONIC">
+      </div>
+      <div class="service-details">
+        <h3>AL MIRQAB ELECTRONIC</h3>
+        <div class="service-verified">
+           موثّق 
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="service-card reveal">
+      <div class="service-img">
+        <img src="8.png" alt="ZIKREET TRADING">
+      </div>
+      <div class="service-details">
+        <h3>ZIKREET TRADING</h3>
+        <div class="service-verified">
+           موثّق 
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="service-card reveal">
+      <div class="service-img">
+        <img src="mal.webp" alt="Al Shifa">
+      </div>
+      <div class="service-details">
+        <h3>Al Shifa</h3>
+        <div class="service-verified">
+           موثّق 
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" style="text-align: center; margin-top: 40px;">
+    <a href="#" class="btn-ghost" style="border-color: rgba(232,25,44,0.3); color: var(--red);">المزيد من الخدمات ←</a>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section" id="categories">
+  <div class="section-header reveal">
+    <span class="section-eyebrow">Nos Catégories • تصنيفاتنا</span>
+    <h2 class="section-title">كل ما تحتاجه في مكان واحد</h2>
+    <p class="section-sub">من الصحة إلى التكنولوجيا — دليل شامل لكل قطاع مهني</p>
+  </div>
+  <div class="cat-grid">
+    <a href="#" class="cat-card reveal"><div class="cat-icon">🏥</div><span class="cat-name">صحة وعافية</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">⚖️</div><span class="cat-name">قانون ومحاسبة</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">🔧</div><span class="cat-name">صناعة وخدمات</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">🚗</div><span class="cat-name">سيارات ونقل</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">💻</div><span class="cat-name">تقنية ورقمية</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">💄</div><span class="cat-name">جمال وموضة</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">🛍️</div><span class="cat-name">تجارة ومتاجر</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">🏗️</div><span class="cat-name">بناء وعقار</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">🍽️</div><span class="cat-name">مطاعم وأغذية</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">📚</div><span class="cat-name">تعليم وتكوين</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">⚙️</div><span class="cat-name">خدمات عامة</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">🌿</div><span class="cat-name">زراعة وبيئة</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">💰</div><span class="cat-name">مالية وتأمين</span></a>
+    <a href="#" class="cat-card reveal"><div class="cat-icon">⚡</div><span class="cat-name">طاقة</span></a>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section how-section" id="how">
+  <div class="section-header reveal">
+    <span class="section-eyebrow">Comment ça marche • كيف يعمل</span>
+    <h2 class="section-title">ثلاث خطوات فقط</h2>
+    <p class="section-sub">بسيط، سريع، فعّال</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-item reveal">
+      <span class="step-num" dir="ltr">01</span>
+      <span class="step-icon">🔍</span>
+      <div class="step-title">ابحث</div>
+      <p class="step-desc">أدخل اسم النشاط أو الخدمة، اختر التصنيف والولاية، واحصل على نتائج دقيقة في ثوانٍ.</p>
+    </div>
+    <div class="step-item reveal">
+      <span class="step-num" dir="ltr">02</span>
+      <span class="step-icon">📋</span>
+      <div class="step-title">اطّلع</div>
+      <p class="step-desc">اكتشف الملف الكامل للنشاط التجاري — معلومات الاتصال، الموقع، التصنيف، والتقييمات.</p>
+    </div>
+    <div class="step-item reveal">
+      <span class="step-num" dir="ltr">03</span>
+      <span class="step-icon">📞</span>
+      <div class="step-title">تواصل</div>
+      <p class="step-desc">تواصل مباشرة مع المحترف أو التاجر دون وسيط — بسرعة وثقة تامة.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS (AUTO MARQUEE) -->
+<section class="section" style="background:var(--dark);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="section-header reveal">
+    <span class="section-eyebrow">Témoignages • آراء المستخدمين</span>
+    <h2 class="section-title">يثقون في وصلة</h2>
+  </div>
+  
+  <div class="testimonials-wrap reveal" dir="ltr">
+    <div class="testimonials-track">
+      <!-- Group 1 -->
+      <div class="testi-group">
+        <div class="testi-card" dir="rtl">
+          <div class="testi-quote">"</div>
+          <p class="testi-text">المنصة منظّمة وتبعث على الثقة. سهّلت فعلاً التواصل بين المحترفين والعملاء.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">ك</div>
+            <div>
+              <div class="testi-name">كريم</div>
+              <div class="testi-role">مسيّر مؤسسة صغيرة | الجزائر</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card" dir="rtl">
+          <div class="testi-quote">"</div>
+          <p class="testi-text">كنت نحوّس على كوافورة قريبة مني، في وصلة لقيتها في دقيقة. سهلة، سريعة، ما ضيعتش الوقت.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">ش</div>
+            <div>
+              <div class="testi-name">شيماء</div>
+              <div class="testi-role">مستخدمة | الجزائر العاصمة</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card" dir="rtl">
+          <div class="testi-quote">"</div>
+          <p class="testi-text">المنصة سهلة وواضحة. العملاء الجدد وليت تيجيني غير كي لقاوني في وصلة. 1000 دج في العام — لا شيء مقارنة بالنتيجة.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">م</div>
+            <div>
+              <div class="testi-name">منال</div>
+              <div class="testi-role">صاحبة نشاط تجاري</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Group 2 (Duplicate for infinite scroll) -->
+      <div class="testi-group">
+        <div class="testi-card" dir="rtl">
+          <div class="testi-quote">"</div>
+          <p class="testi-text">المنصة منظّمة وتبعث على الثقة. سهّلت فعلاً التواصل بين المحترفين والعملاء.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">ك</div>
+            <div>
+              <div class="testi-name">كريم</div>
+              <div class="testi-role">مسيّر مؤسسة صغيرة | الجزائر</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card" dir="rtl">
+          <div class="testi-quote">"</div>
+          <p class="testi-text">كنت نحوّس على كوافورة قريبة مني، في وصلة لقيتها في دقيقة. سهلة، سريعة، ما ضيعتش الوقت.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">ش</div>
+            <div>
+              <div class="testi-name">شيماء</div>
+              <div class="testi-role">مستخدمة | الجزائر العاصمة</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card" dir="rtl">
+          <div class="testi-quote">"</div>
+          <p class="testi-text">المنصة سهلة وواضحة. العملاء الجدد وليت تيجيني غير كي لقاوني في وصلة. 1000 دج في العام — لا شيء مقارنة بالنتيجة.</p>
+          <div class="testi-author">
+            <div class="testi-avatar">م</div>
+            <div>
+              <div class="testi-name">منال</div>
+              <div class="testi-role">صاحبة نشاط تجاري</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" id="join" style="padding:60px 5vw 100px;">
+  <div class="cta-simple reveal">
+    <div class="cta-simple-inner">
+      <div>
+        <div class="cta-simple-label">للمحترفين والتجار</div>
+        <h2 class="cta-simple-title">سجّل نشاطك التجاري</h2>
+        <p class="cta-simple-sub">أضف مؤسستك إلى وصلة واجعل العملاء يجدونك بسهولة</p>
+      </div>
+      <div class="cta-simple-actions">
+        <a href="#" class="btn-primary">ابدأ مجاناً</a>
+        <a href="tel:+213555635842" class="btn-ghost">📞 اتصل بنا</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo" dir="ltr">WASS<span>LA</span></div>
+      <p class="footer-desc">
+        المرجع المهني الأول في الجزائر — كل نشاط تجاري، كل قطاع، كل ولاية في مكان واحد.
+      </p>
+      <div class="footer-contacts">
+        <a href="tel:+213555635842">📞 +213 555 63 58 42</a>
+        <a href="mailto:contact@wassla.dz">✉️ contact@wassla.dz</a>
+        <a href="#">📍 الجزائر | ALGÉRIE</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">الروابط</div>
+      <ul class="footer-links">
+        <li><a href="#">الرئيسية</a></li>
+        <li><a href="#">من نحن</a></li>
+        <li><a href="#">كيف يعمل</a></li>
+        <li><a href="#">الأسعار</a></li>
+        <li><a href="#">اتصل بنا</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">الخدمات</div>
+      <ul class="footer-links">
+        <li><a href="#">البحث بالتصنيف</a></li>
+        <li><a href="#">الملفات الموثّقة</a></li>
+        <li><a href="#">كتاب وصلة</a></li>
+        <li><a href="#">الشركاء VIP</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">قانوني</div>
+      <ul class="footer-links">
+        <li><a href="#">شروط الاستخدام</a></li>
+        <li><a href="#">سياسة الخصوصية</a></li>
+        <li><a href="#">ملفات تعريف الارتباط</a></li>
+        <li><a href="#">إمكانية الوصول</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 WASSLA. Tous droits réservés.</span>
+    <span style="font-family:'Unbounded',sans-serif;font-size:0.7rem;font-weight:700;color:var(--red);direction:ltr;unicode-bidi:isolate;">WASSLA</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
